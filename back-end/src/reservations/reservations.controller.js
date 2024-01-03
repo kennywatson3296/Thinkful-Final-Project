@@ -38,22 +38,35 @@ function hasPeople(req, res, next){
   }
   next({status:400, message: `Number of people in the party must be more than 0!`})
 }
+const errorResponses = {
+  day: "The store is closed on Tuesdays.",
+  past: "Reservations must be made in the future!",
+  both: "Reservations must be made on a future working date.",
+  time: "Reservations need to be within business hours."
+}
 
-function validDate(req, res, next){
-  const {data: {reservation_date}} = req.body
-  const date = new Date(reservation_date.toString())
+function validTimeframe(req, res, next){
+  const {data: {reservation_date, reservation_time}} = req.body
+  const day = new Date(reservation_date.toString())
   const today = new Date()
-  const day = reservation_date
-  if(day < today){
+  const date = reservation_date
+  const time = reservation_time.split(":").join("")
+  let result = null
+ 
+console.log(day.getDay())
+  day.getDay() === 1 && day < today  ? result = "both" 
+  : day.getDay() === 1 ? result = "day"
+  : day < today ? result = "past"
+  : 1030 < time < 2130 ? result = "time"
+  : result = null
+  
+  if(result !== null){
     return next({
-      status:400, message:`Must make reservations on a future date!`
-    })
-  }
-  else if(date.getDay() === 1){
-    return next({
-      status:400, message:`Restaurant is closed on Tuesdays.`
-    })
-  }
+      status: 400, message: errorResponses[result]
+    })}
+    else{
+      return next()
+    }
 }
 
 async function reservationExists(req, res, next){
@@ -82,7 +95,7 @@ async function destroy(req, res, next){
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [hasData, hasProperty('first_name'), hasProperty('last_name'), hasProperty('reservation_date'),
-          hasProperty('reservation_time'), hasProperty('mobile_number'), validDate, asyncErrorBoundary(create)],
+          hasProperty('reservation_time'), hasProperty('mobile_number'), validTimeframe, asyncErrorBoundary(create)],
   delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)],
   
 };

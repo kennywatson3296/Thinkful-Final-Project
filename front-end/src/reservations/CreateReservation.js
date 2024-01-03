@@ -3,7 +3,7 @@ import {useHistory} from 'react-router-dom'
 import {createReservation} from "../utils/api"
 import ReservationForm from "./ReservationForm"
 import ErrorAlert from "../layout/ErrorAlert"
-import {today} from "../utils/date-time"
+//import {today} from "../utils/date-time"
 function CreateReservation({setDate}){
     const history = useHistory()
     
@@ -17,12 +17,12 @@ const criteria = {
     people: "",
 }
 
-const errorResponses = {
+/*const errorResponses = {
     day: "Reservation date must not be on Tuesdays.",
     past: "Reservations must not be made in the past!",
     both: "Reservations must not be made in the past, or on a Tuesday.",
     time: "Reservations need to be within business hours."
-}
+}*/
 
 //set the variable to update for creation
 const [reservation, setReservation] = useState(criteria)
@@ -32,7 +32,7 @@ function cancelHandler(){
 history.push("/")
 }
 
-function checkValid(reservation){
+/*function checkValid(reservation){
     const date = new Date(reservation.reservation_date.toString())
     const day = reservation.reservation_date
     const time = reservation.reservation_time.split(":").join("")
@@ -47,7 +47,7 @@ date.getDay() === 1 && day > today()  ? result = "both"
 
 return result
   
-}
+}*/
 
 //submitHandler function for creating reservations
  async function submitHandler(event){
