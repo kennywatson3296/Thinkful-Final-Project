@@ -72,7 +72,7 @@ function changeHandler({target: {name, value}}){
         ...previousReservation,
         [name]: value,
     }))
-    console.log(reservation.reservation_date)
+   
 }
 
 

@@ -33,7 +33,7 @@ return function (req, res, next){
 
 function hasPeople(req, res, next){
   const {data: {people} = {}} = req.body
-  if(Number(people) > 0){
+  if(people > 0){
     return next()
   }
   next({status:400, message: `Number of people in the party must be more than 0!`})
@@ -52,12 +52,12 @@ function validTimeframe(req, res, next){
   const date = reservation_date
   const time = reservation_time.split(":").join("")
   let result = null
- 
-console.log(day.getDay())
+
+
   day.getDay() === 1 && day < today  ? result = "both" 
   : day.getDay() === 1 ? result = "day"
   : day < today ? result = "past"
-  : 1030 < time < 2130 ? result = "time"
+  : time > 2130 || time < 1030 ? result = "time"
   : result = null
   
   if(result !== null){
@@ -69,6 +69,8 @@ console.log(day.getDay())
     }
 }
 
+
+
 async function reservationExists(req, res, next){
   const {reservationId} = req.params
   const reservation = await service.read(reservationId)
@@ -77,7 +79,7 @@ async function reservationExists(req, res, next){
     return next()
   }
   return next({
-    status: 404, message: 'Cannot be found'
+    status: 404, message: 'Cannot be found: 99'
   })
 }
 
@@ -95,7 +97,7 @@ async function destroy(req, res, next){
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [hasData, hasProperty('first_name'), hasProperty('last_name'), hasProperty('reservation_date'),
-          hasProperty('reservation_time'), hasProperty('mobile_number'), validTimeframe, asyncErrorBoundary(create)],
+          hasProperty('reservation_time'), hasProperty('mobile_number'), hasPeople, validTimeframe, asyncErrorBoundary(create)],
   delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)],
   
 };

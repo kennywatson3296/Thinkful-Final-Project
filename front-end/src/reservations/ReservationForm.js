@@ -12,7 +12,7 @@ function ReservationForm({data, changeHandler}){
                     </label>
                     <input className='form-control'
                     id='first_name'
-                    name='first_name'
+                    name="first_name"
                     type='text'
                     value = {data.first_name}
                     onChange = {changeHandler}
@@ -25,7 +25,7 @@ function ReservationForm({data, changeHandler}){
                     </label>
                     <input className = 'form-control'
                     id='last_name'
-                    name='last_name'
+                    name="last_name"
                     type = 'text'
                     value = {data.last_name}
                     onChange = {changeHandler}
@@ -41,7 +41,7 @@ function ReservationForm({data, changeHandler}){
                     </label>
                     <input className = 'form-control'
                     id = 'mobile_number'
-                    name='mobile_number'
+                    name="mobile_number"
                     type='tel'
                     pattern='[0-9]{3}-[0-9]{3}-[0-9]{4}'
                     value = {data.mobile_number}
@@ -55,7 +55,7 @@ function ReservationForm({data, changeHandler}){
                     </label>
                     <input className = 'form-control'
                     id='people'
-                    name='people'
+                    name="people"
                     type='number'
                     min='1'
                     value = {data.people}
@@ -72,7 +72,7 @@ function ReservationForm({data, changeHandler}){
                     </label>
                     <input className='form-control'
                     id='reservation_date'
-                    name='reservation_date'
+                    name="reservation_date"
                     type='date'
                     value={data.reservation_date}
                     onChange = {changeHandler}
@@ -85,7 +85,7 @@ function ReservationForm({data, changeHandler}){
                     </label>
                     <input className = 'form-control'
                     id='reservation_time'
-                    name='reservation_time'
+                    name="reservation_time"
                     type='time'
                    
                     value = {data.reservation_time}
