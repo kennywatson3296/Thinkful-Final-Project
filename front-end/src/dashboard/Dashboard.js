@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import Reservations from "../reservations/Reservations"
 import {next, previous} from "../utils/date-time"
+import TablesList from "../tables/TablesList"
 /**
  * Defines the dashboard page.
  * @param date
@@ -11,19 +12,39 @@ import {next, previous} from "../utils/date-time"
  */
 function Dashboard({date, setDate}) {
   const [reservations, setReservations] = useState([]);
-  const [reservationsError, setReservationsError] = useState(null);
+  const [error, setError] = useState(null);
+  const [tables, setTables] = useState([])
   
   
 
-  useEffect(loadDashboard, [date]);
+  useEffect(()=>{
+    loadDashboard()
+    loadTables()
+    
 
-  function loadDashboard() {
-    const abortController = new AbortController();
-    setReservationsError(null);
-    listReservations({ date }, abortController.signal)
-      .then(setReservations)
-      .catch(setReservationsError);
-    return () => abortController.abort();
+  }, [date]);
+
+  
+   function loadDashboard() {
+      const abortController = new AbortController();
+      setError(null);
+      
+      listReservations( {date} , abortController.signal)
+        .then(setReservations)
+        .catch(setError);
+        
+        
+      return () => abortController.abort();
+    }
+
+
+  function loadTables(){
+    const abortController = new AbortController()
+    setError(null)
+listTables(abortController.signal)
+.then(setTables)
+.catch(setError)
+return () => abortController.abort()
   }
 
   function handlePrevious(event){
@@ -43,13 +64,19 @@ if(reservations.length > 0){
       <h1>Dashboard</h1>
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for date: {date}</h4>
+        
       </div>
       <div className='d-md-flex mb-3'>
         <button className='col-3' type='button' onClick={handlePrevious}>Previous</button>
         <button className="col-3" type="button" onClick={handleNext}>Next</button>
       </div>
-      <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={error} />
+      <div col-6 mb-3>
       <Reservations reservations={reservations} />
+</div>
+<div col-6 mb-3>
+  <TablesList tables={tables}/>
+</div>
     </main>
   );
 }
@@ -64,8 +91,13 @@ else{
         <button className='col-3' type='button' onClick={handlePrevious}>Previous</button>
         <button className="col-3" type="button" onClick={handleNext}>Next</button>
       </div>
-      <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={error} />
+      <div className="col-6 mb-6">
       <h6 className="mb-0">No Reservations for date: {date}</h6>
+      </div>
+      <div className="col-6 mb-6">
+      <TablesList tables={tables}/>
+      </div>
     </main>
   )
 }

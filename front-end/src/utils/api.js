@@ -60,6 +60,8 @@ async function fetchJson(url, options, onCancel) {
 
 export async function listReservations(params, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
+  
+  
   Object.entries(params).forEach(([key, value]) =>
     url.searchParams.append(key, value.toString())
   );
@@ -80,8 +82,55 @@ export async function createReservation(reservation, signal){
   return await fetchJson(url, options)
 }
 
+export async function createTable(table, signal){
+  const url = new URL(`${API_BASE_URL}/tables`)
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({data: table }),
+    signal
+  }
+  return await fetchJson(url, options)
+}
+
+export async function listTables( signal){
+  const url = new URL(`${API_BASE_URL}/tables`)
+  
+  return await fetchJson(url, {headers, signal}, [])
+}
+
+export async function deleteTable(tableId){
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}`)
+  return await fetchJson(url, {method: "DELETE", headers }, {})
+}
 
 export async function deleteReservation(reservationId){
   const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`)
   return await fetchJson(url, { method: "DELETE", headers }, {})
+}
+
+export async function updateReservation(reservation, signal){
+  const url = new URL(`${API_BASE_URL}/${reservation.reservation_id}`)
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: reservation}),
+    signal
+  }
+
+  return await fetchJson(url, options)
+}
+
+export async function searchReservations(params, signal){
+  const url = new URL(`${API_BASE_URL}/reservations`)
+  Object.entries(params).forEach(([key, value]) =>
+    url.searchParams.append(key, value.toString())
+  );
+  return await fetchJson(url, { headers, signal }, [])
+    .then(formatReservationDate)
+    .then(formatReservationTime);
+}
+
+export async function seatReservation(reservationId){
+  
 }

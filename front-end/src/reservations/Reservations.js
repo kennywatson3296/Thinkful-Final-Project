@@ -1,9 +1,18 @@
 import React from 'react'
+import {useHistory} from 'react-router-dom'
 import {deleteReservation} from "../utils/api"
 
 function Reservations({reservations}){
    
-  
+    const history = useHistory()
+    console.log(history)
+
+
+  function seatReservation(reservation){
+
+  }
+
+  function editReservation(){}
 
     
     
@@ -18,16 +27,19 @@ function Reservations({reservations}){
             Mobile Number: {res.mobile_number}
           </p>
           <p className='card-test'>
-              Reservation date: {res.reservation_date}, Reservation Time: {res.reservation_time}
+             Reservation Time: {res.reservation_time}
           </p>
       </div>
-      <button className="btn btn-danger " onClick={()=> deleteReservation(res.reservation_id)}>Delete</button>
+      <button type='button' className="btn btn-danger " onClick={()=> deleteReservation(res.reservation_id)}>Delete</button>
+      <button className='btn btn-success' onClick={seatReservation(res)}>Seat</button>
+      <button type='button' className='btn btn-info' onClick={editReservation(res)}>
+        Edit</button>
       </div>
     )})
   
-    return ( <main>
+    return ( <div>
         {cards}
-    </main>
+    </div>
     )
     
 }

@@ -4,10 +4,21 @@ const knex = require('../db/connection')
 //list all reservations
 function list(date){
     return knex('reservations')
-    .select('*')
-    .where({'reservation_date': date})
+    .select('first_name','last_name', 'mobile_number', 'people', 'reservation_date', 'reservation_time')
+    .where({ 'reservation_date' : date })
+    .distinct()
     
 }
+
+function search(mobile_number) {
+        return knex("reservations")
+        .whereRaw(
+          "translate(mobile_number, '() -', '') like ?",
+           `%${mobile_number.replace(/\D/g, "")}%`
+         )
+         .orderBy("reservation_date");
+     }
+
 
 function listAll(){
     return knex('reservations as r')
@@ -23,8 +34,12 @@ function destroy(reservationId){
 
 //create a reservation
 function create(newReservation){
-return knex('reservations').insert(newReservation).returning('*')
+return knex('reservations')
+.returning(['first_name', 'last_name', 'mobile_number', 'people'])
+.insert(newReservation)
+
 }
+
 
 function read(reservationId){
     return knex('reservations')
@@ -35,6 +50,7 @@ function read(reservationId){
 
 module.exports = {
     list,
+    search,
     create,
     listAll,
     delete: destroy,
