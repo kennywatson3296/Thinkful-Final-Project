@@ -17,6 +17,7 @@ function Reservations({reservations}){
     
     
     const cards = reservations.map((res)=> {
+      console.log(res)
          return ( <div className='border border-secondary'>
       <div key={res.reservation_id} className='card-body'>
           <h5 className='card-title'>{res.first_name} {res.last_name}</h5>
@@ -32,8 +33,7 @@ function Reservations({reservations}){
       </div>
       <button type='button' className="btn btn-danger " onClick={()=> deleteReservation(res.reservation_id)}>Delete</button>
       <button className='btn btn-success' onClick={seatReservation(res)}>Seat</button>
-      <button type='button' className='btn btn-info' onClick={editReservation(res)}>
-        Edit</button>
+      <a href={`/reservations/${res.reservation_id}/edit`} className='btn btn-secondary'>Edit</a>
       </div>
     )})
   

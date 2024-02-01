@@ -109,6 +109,11 @@ export async function deleteReservation(reservationId){
   return await fetchJson(url, { method: "DELETE", headers }, {})
 }
 
+export async function readReservation(reservationId, signal){
+  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`)
+  return await fetchJson(url, { headers, signal }, [])
+}
+
 export async function updateReservation(reservation, signal){
   const url = new URL(`${API_BASE_URL}/${reservation.reservation_id}`)
   const options = {

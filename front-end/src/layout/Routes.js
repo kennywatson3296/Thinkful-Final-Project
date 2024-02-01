@@ -7,6 +7,7 @@ import {today} from "../utils/date-time"
 import CreateReservation from "../reservations/CreateReservation"
 import CreateTable from "../tables/CreateTable"
 import FindReservation from "../reservations/FindReservation";
+import EditReservation from "../reservations/EditReservation"
 /**
  * Defines all the routes for the application.
  *
@@ -23,6 +24,9 @@ function Routes() {
       </Route>
       <Route exact={true} path="/search">
         <FindReservation />
+      </Route>
+      <Route path="/reservations/:reservationId/edit">
+        <EditReservation date={date} setDate={setDate}/>
       </Route>
       <Route path="/dashboard">
         <Dashboard date={date} setDate={setDate}/>

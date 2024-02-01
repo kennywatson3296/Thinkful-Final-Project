@@ -131,11 +131,23 @@ async function read(req, res, next){
   res.json({data: reservation})
 }
 
+async function update(req, res, next){
+  const {reservation} = res.locals.reservation.reservation_id
+  const updatedReservation = {
+    ...req.body.data,
+    reservation_id: reservation,
+  }
+  await service.update(updatedReservation)
+  res.json({data: await service.read(reservation)})
+
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   create: [hasData, hasProperty('first_name'), hasProperty('last_name'), validDate,
           hasProperty('reservation_time'), hasProperty('mobile_number'), hasProperty('people'), hasPeople, validTime, validTimeframe, asyncErrorBoundary(create)],
   delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)],
   read: [asyncErrorBoundary(reservationExists), read],
+  update: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(update)],
   
 };
