@@ -1,6 +1,6 @@
 import React from "react"
 
-function TablesList({tables}){
+function TablesList({tables, handleFinish}){
 
    
 const cards = tables.map((tab)=>{
@@ -13,9 +13,9 @@ const cards = tables.map((tab)=>{
                 <p className="card-text">Reservation: {tab.reservation_id}</p>
                 
                 <div className="row justify-content-end mb-3">
-                    <div className="col-3 mb-3">
+                        <button data-table-id-finish={tab.table_id} name={tab.table_id} className="btn btn-success" onClick={handleFinish}>Finish</button>
                         <button data-table-id-status={tab.table_id} className="btn btn-danger">Occupied</button>
-                    </div>
+                   
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@ const cards = tables.map((tab)=>{
                 <p className="card-text">Capacity: {tab.capacity}</p>
                 <div className="row justify-content-end mb-3">
                     <div className="col-3 mb-3">
-                        <button className="btn btn-success">Free</button>
+                        <button data-table-id-status={tables.table_id} className='btn btn-success'>Free</button>
                     </div>
                 </div>
             </div>

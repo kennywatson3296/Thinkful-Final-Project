@@ -31,12 +31,15 @@ const errorResponses = {
     time: "Reservations need to be within business hours."
   }
 
-  function checkValid({reservation_date, reservation_time}){
+  function checkValid(res){
+    const data = res
+    console.log(data.reservation_time)
+    console.log(data.reservation_date)
     let result = null
     let day
     let time
-    reservation_date.length > 0 ? day = reservation_date : day = toDay
-    reservation_time.length > 0 ? time = reservation_time.split(':').join('') : time = 1300
+   res.reservation_date.length > 0 ? day = res.reservation_date : day = toDay
+res.reservation_time.length > 0 ? time = res.reservation_time.split(':').join('') : time = 1300
     const date = new Date(day)
     
     date.getDay() === 1 && day < toDay  ? result = "both" 

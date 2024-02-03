@@ -11,6 +11,7 @@ const toDay = today()
 const history = useHistory()
 const {reservationId} = useParams()
 const criteria = {
+   
     first_name: "",
     last_name: "",
     mobile_number: "",
@@ -24,7 +25,7 @@ const [error, setError] = useState(null)
 
 useEffect(()=> {
     loadReservation(reservationId)
-    
+    console.log(reservation)
 }, [])
 useEffect(()=>{
     checkValid(reservation)
@@ -87,8 +88,16 @@ function changeHandler({target: {name, value}}){
         history.goBack()
         }
 
-function submitHandler(){
-
+function submitHandler(event){
+    event.preventDefault()
+    setError(null)
+    console.log(reservation)
+    updateReservation(reservation)
+    .then(setDate(reservation.reservation_date))
+    .then(()=>{
+        history.push('/')
+    })
+    .catch(setError)
 }
 
 

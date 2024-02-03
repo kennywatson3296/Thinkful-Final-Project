@@ -35,7 +35,7 @@ function destroy(reservationId){
 //create a reservation
 function create(newReservation){
 return knex('reservations')
-.returning(['first_name', 'last_name', 'mobile_number', 'people'])
+.returning(['first_name', 'last_name', 'mobile_number', 'people', 'reservation_id'])
 .insert(newReservation)
 
 }

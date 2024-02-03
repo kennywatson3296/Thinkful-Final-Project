@@ -11,7 +11,7 @@ const controller = require("./reservations.controller");
 
 router.route("/").get(controller.list).post(controller.create).all(methodNotAllowed)
 
-router.route("/:reservationId").get(controller.read).delete(controller.delete).all(methodNotAllowed)
-router.route("/:reservationId/edit").put(controller.update).all(methodNotAllowed)
+router.route("/:reservationId").get(controller.read).put(controller.update).delete(controller.delete).all(methodNotAllowed)
+
 
 module.exports = router;

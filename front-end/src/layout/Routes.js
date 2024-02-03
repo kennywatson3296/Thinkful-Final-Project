@@ -8,6 +8,7 @@ import CreateReservation from "../reservations/CreateReservation"
 import CreateTable from "../tables/CreateTable"
 import FindReservation from "../reservations/FindReservation";
 import EditReservation from "../reservations/EditReservation"
+import SeatReservation from "../tables/SeatReservation";
 /**
  * Defines all the routes for the application.
  *
@@ -27,6 +28,9 @@ function Routes() {
       </Route>
       <Route path="/reservations/:reservationId/edit">
         <EditReservation date={date} setDate={setDate}/>
+      </Route>
+      <Route path="/reservations/:reservationId/seat">
+        <SeatReservation />
       </Route>
       <Route path="/dashboard">
         <Dashboard date={date} setDate={setDate}/>

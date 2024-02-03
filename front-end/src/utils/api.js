@@ -114,8 +114,19 @@ export async function readReservation(reservationId, signal){
   return await fetchJson(url, { headers, signal }, [])
 }
 
+export async function seatReservation(tableId, reservationId, signal){
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`)
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: {reservation_id: reservationId} }),
+    signal
+  }
+  return await fetchJson(url, options)
+}
+
 export async function updateReservation(reservation, signal){
-  const url = new URL(`${API_BASE_URL}/${reservation.reservation_id}`)
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation.reservation_id}`)
   const options = {
     method: "PUT",
     headers,
@@ -136,6 +147,17 @@ export async function searchReservations(params, signal){
     .then(formatReservationTime);
 }
 
-export async function seatReservation(reservationId){
-  
+export async function finishTable(tableId, signal){
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`)
+  console.log(tableId)
+  const options ={
+    method: "DELETE",
+    headers,
+    body: JSON.stringify({data: {table_id: tableId}}),
+    signal
+  }
+  console.log(options.body)
+
+  return await fetchJson(url, options)
 }
+

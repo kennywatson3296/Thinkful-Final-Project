@@ -121,6 +121,7 @@ async function create(req, res){
     data: newReservation[0]
   })
 }
+
 async function destroy(req, res, next){
   await service.delete(res.locals.reservation.reservation_id)
   res.sendStatus(204)
@@ -132,14 +133,12 @@ async function read(req, res, next){
 }
 
 async function update(req, res, next){
-  const {reservation} = res.locals.reservation.reservation_id
   const updatedReservation = {
     ...req.body.data,
-    reservation_id: reservation,
+    reservation_id: res.locals.reservation.reservation_id,
   }
   await service.update(updatedReservation)
-  res.json({data: await service.read(reservation)})
-
+  res.json({data: await service.read(updatedReservation.reservation_id)})
 }
 
 module.exports = {
@@ -148,6 +147,7 @@ module.exports = {
           hasProperty('reservation_time'), hasProperty('mobile_number'), hasProperty('people'), hasPeople, validTime, validTimeframe, asyncErrorBoundary(create)],
   delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)],
   read: [asyncErrorBoundary(reservationExists), read],
-  update: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(update)],
+  update: [asyncErrorBoundary(reservationExists), hasData, hasProperty('first_name'), hasProperty('last_name'), validDate,
+  hasProperty('reservation_time'), hasProperty('mobile_number'), hasProperty('people'), hasPeople, validTime, validTimeframe, asyncErrorBoundary(update)],
   
 };

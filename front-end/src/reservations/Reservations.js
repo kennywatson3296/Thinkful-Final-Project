@@ -1,23 +1,11 @@
 import React from 'react'
-import {useHistory} from 'react-router-dom'
+
 import {deleteReservation} from "../utils/api"
 
-function Reservations({reservations}){
-   
-    const history = useHistory()
-    console.log(history)
-
-
-  function seatReservation(reservation){
-
-  }
-
-  function editReservation(){}
-
-    
+function Reservations({reservations}){  
     
     const cards = reservations.map((res)=> {
-      console.log(res)
+      
          return ( <div className='border border-secondary'>
       <div key={res.reservation_id} className='card-body'>
           <h5 className='card-title'>{res.first_name} {res.last_name}</h5>
@@ -32,7 +20,7 @@ function Reservations({reservations}){
           </p>
       </div>
       <button type='button' className="btn btn-danger " onClick={()=> deleteReservation(res.reservation_id)}>Delete</button>
-      <button className='btn btn-success' onClick={seatReservation(res)}>Seat</button>
+      <a href={`/reservations/${res.reservation_id}/seat`} className='btn btn-success'>Seat</a>
       <a href={`/reservations/${res.reservation_id}/edit`} className='btn btn-secondary'>Edit</a>
       </div>
     )})

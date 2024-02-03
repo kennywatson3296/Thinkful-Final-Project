@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables } from "../utils/api";
+import { listReservations, listTables, finishTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import Reservations from "../reservations/Reservations"
 import {next, previous} from "../utils/date-time"
@@ -24,6 +24,7 @@ function Dashboard({date, setDate}) {
 
   }, [date]);
 
+  
   
    function loadDashboard() {
       const abortController = new AbortController();
@@ -58,6 +59,16 @@ return () => abortController.abort()
     setDate(next(date))
   }
 
+  function handleFinish(event){
+    event.preventDefault()
+    const confirmation = window.confirm("Is this table ready to seat new guests? This cannot be undone.")
+    if(confirmation){
+      const id = event.target.name
+      finishTable(id)
+      .catch(setError)
+    }
+  }
+
 if(reservations.length > 0){
   return (
     <main>
@@ -75,7 +86,7 @@ if(reservations.length > 0){
       <Reservations reservations={reservations} />
 </div>
 <div col-6 mb-3>
-  <TablesList tables={tables}/>
+  <TablesList tables={tables} handleFinish={handleFinish}/>
 </div>
     </main>
   );
@@ -96,7 +107,7 @@ else{
       <h6 className="mb-0">No Reservations for date: {date}</h6>
       </div>
       <div className="col-6 mb-6">
-      <TablesList tables={tables}/>
+      <TablesList tables={tables} handleFinish={handleFinish}/>
       </div>
     </main>
   )
