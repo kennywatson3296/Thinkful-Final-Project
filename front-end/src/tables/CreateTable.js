@@ -1,9 +1,11 @@
 import React, {useState} from "react"
-import TablesForm from "./TablesForm"
+
 import {useHistory} from 'react-router-dom'
 import {createTable} from "../utils/api"
 import ErrorAlert from "../layout/ErrorAlert"
-function CreateTable(){
+
+
+function CreateTable({setDate}){
 const history = useHistory()
     const criteria = {
        table_name: '',
@@ -18,7 +20,6 @@ const history = useHistory()
             ...previousTable,
             [name]: value,
         }))
-        console.log(table)
     }
 
     function cancelHandler(){
@@ -27,6 +28,7 @@ const history = useHistory()
 
     function submitHandler(event){
         event.preventDefault()
+        table.capacity = Number(table.capacity)
         createTable(table)
         .then(()=>{
             history.push('/')
@@ -44,9 +46,9 @@ const history = useHistory()
                         <label className='form-label' htmlFor='firstName'>
                             Table Name:
                         </label>
-                        <input className='form-control'
+                        <input name="table_name"
                         id='table_name'
-                        name="table_name"
+                        className='form-control'
                         type='text'
                         value = {table.table_name}
                         onChange = {changeHandler}

@@ -4,7 +4,7 @@ const knex = require('../db/connection')
 //list all reservations
 function list(date){
     return knex('reservations')
-    .select('first_name','last_name', 'mobile_number', 'people', 'reservation_date', 'reservation_time', 'reservation_id')
+    .select('first_name','last_name', 'mobile_number', 'people', 'reservation_date', 'reservation_time', 'reservation_id', 'status')
     .where({ 'reservation_date' : date })
     .distinct()
     
@@ -47,6 +47,13 @@ function update(updatedReservation){
     .update(updatedReservation, "*")
 }
 
+function updateStatus(updatedReservation){
+    return knex("reservations")
+    .select("*")
+    .where({"reservation_id": updatedReservation.reservation_id})
+    .update(updatedReservation, "*")
+}
+
 function read(reservationId){
     return knex('reservations')
     .select('*')
@@ -62,4 +69,5 @@ module.exports = {
     delete: destroy,
     read,
     update,
+    updateStatus,
 }

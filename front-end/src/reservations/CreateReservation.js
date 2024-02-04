@@ -32,9 +32,6 @@ const errorResponses = {
   }
 
   function checkValid(res){
-    const data = res
-    console.log(data.reservation_time)
-    console.log(data.reservation_date)
     let result = null
     let day
     let time
@@ -45,7 +42,7 @@ res.reservation_time.length > 0 ? time = res.reservation_time.split(':').join(''
     date.getDay() === 1 && day < toDay  ? result = "both" 
   : date.getDay() === 1 ? result = "day"
   : day< toDay ? result = "past"
-  : time > 2130 || time < 1030 ? result = "time"
+  : time < 1030 ? result = "time"
   : result = null
   
 if(result !== null){
@@ -74,6 +71,8 @@ history.goBack()
 //submitHandler function for creating reservations
   function submitHandler(event){
     event.preventDefault()
+    console.log(reservation.reservation_time)
+    console.log(reservation.reservation_time.split(":").join(""))
     setError(null)
     createReservation(reservation)
     .then(setDate(reservation.reservation_date))

@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import {useHistory, useParams} from 'react-router-dom'
-import { listTables, readReservation, seatReservation } from '../utils/api'
+import { listTables, readReservation, seatReservation, updateStatus } from '../utils/api'
 import ErrorAlert from '../layout/ErrorAlert'
 
-function SeatReservation(){
+function SeatReservation({setDate}){
 const {reservationId} = useParams()
-
+const status = 'seated'
 const history = useHistory()
 const [tables, setTables] = useState([])
 const [error, setError] = useState(null)
@@ -61,7 +61,11 @@ function submitHandler(event){
     setError(null)
     seatReservation(table.table_id, reservation.reservation_id)
     .then(()=>{
-        history.push('/')
+        updateStatus(reservationId, status)
+        .then(setDate(reservation.reservation_date))
+        .then(()=>{
+            history.push('/')
+        })
     })
     .catch(setError)
 }

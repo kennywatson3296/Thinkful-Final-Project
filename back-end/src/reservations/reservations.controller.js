@@ -56,22 +56,21 @@ function validTimeframe(req, res, next){
   const day = new Date(`${reservation_date}`)
   const today = new Date().toISOString().slice(0,10)
  const daySub = day.toISOString().slice(0,10)
- 
+console.log(reservation_time)
+console.log(reservation_time.split(":").join(""))
   const time = reservation_time.split(":").join("")
   let result = null
-
-  
-
-
   day.getDay() === 1 && daySub < today  ? result = "both" 
   : day.getDay() === 1 ? result = "day"
   : daySub < today ? result = "past"
-  : time > 2130 || time < 1030 ? result = "time"
+  : time > 2130 ? result = "time"
+  : time < 1030 ? result = "time"
   : result = null
   
   if(result !== null){
+    const response = errorResponses[result]
     return next({
-      status: 400, message: errorResponses[result]
+      status: 400, message: response
     })}
     else{
       return next()
@@ -93,7 +92,7 @@ function validTime(req, res, next){
   const {data: {reservation_time}} = req.body
   const time = reservation_time.split(":").join("")
  
-  if(Number(time) && time>0 && time <2400 ){
+  if(Number(time) && time>=0 && time <2400 ){
     return next()
   }
   return next({
@@ -141,6 +140,27 @@ async function update(req, res, next){
   res.json({data: await service.read(updatedReservation.reservation_id)})
 }
 
+async function updateStatus(req, res, next){
+  const {reservation} = res.locals
+  const {status} = req.body.data
+  const updatedReservation = {
+    ...reservation,
+    status: status}
+  await service.updateStatus(updatedReservation)
+  res.json({data: await service.read(updatedReservation.reservation_id)})
+}
+
+function hasValidStatus(req, res, next){
+  const {status} = req.body.data
+  const options = ['booked', 'seated', 'finished']
+  if (status && options.indexOf(status)>=0){
+    return next()
+  }
+  return next({
+    status:400, message: 'status'
+  })
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   create: [hasData, hasProperty('first_name'), hasProperty('last_name'), validDate,
@@ -149,5 +169,6 @@ module.exports = {
   read: [asyncErrorBoundary(reservationExists), read],
   update: [asyncErrorBoundary(reservationExists), hasData, hasProperty('first_name'), hasProperty('last_name'), validDate,
   hasProperty('reservation_time'), hasProperty('mobile_number'), hasProperty('people'), hasPeople, validTime, validTimeframe, asyncErrorBoundary(update)],
+  updateStatus: [hasData, asyncErrorBoundary(reservationExists), hasValidStatus, updateStatus],
   
 };

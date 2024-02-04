@@ -18,6 +18,7 @@ import SeatReservation from "../tables/SeatReservation";
  */
 function Routes() {
   const [date, setDate] = useState(today())
+  console.log(date)
   return (
     <Switch>
       <Route exact={true} path="/">
@@ -27,10 +28,10 @@ function Routes() {
         <FindReservation />
       </Route>
       <Route path="/reservations/:reservationId/edit">
-        <EditReservation date={date} setDate={setDate}/>
+        <EditReservation  setDate={setDate}/>
       </Route>
       <Route path="/reservations/:reservationId/seat">
-        <SeatReservation />
+        <SeatReservation setDate={setDate}/>
       </Route>
       <Route path="/dashboard">
         <Dashboard date={date} setDate={setDate}/>
@@ -39,7 +40,7 @@ function Routes() {
         <CreateReservation setDate={setDate}/>
       </Route>
       <Route path = "/tables/new">
-        <CreateTable />
+        <CreateTable setDate={setDate}/>
       </Route>
       <Route>
         <NotFound />

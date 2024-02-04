@@ -149,15 +149,23 @@ export async function searchReservations(params, signal){
 
 export async function finishTable(tableId, signal){
   const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`)
-  console.log(tableId)
+  
   const options ={
     method: "DELETE",
     headers,
-    body: JSON.stringify({data: {table_id: tableId}}),
+  }
+  return await fetchJson(url, options)
+}
+
+export async function updateStatus(reservationId, status, signal){
+  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}/status`)
+
+  const options= {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: {status: status} }),
     signal
   }
-  console.log(options.body)
-
   return await fetchJson(url, options)
 }
 

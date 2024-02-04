@@ -6,7 +6,7 @@ async function list(req, res){
 }
 
 function hasData(req, res, next){
-    console.log(req.body.data)
+    
     if(req.body.data){
         return next()
     }
@@ -124,7 +124,7 @@ async function finishTable(req, res, next){
         reservation_id: null,
     }
     await service.update(updatedTable)
-    res.status(200)
+    res.status(200).json({data: updatedTable })
 }
 
 

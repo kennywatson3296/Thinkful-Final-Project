@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-function TablesForm({data, changeHandler}) {
+function TablesForm({table, changeHandler}) {
    
     return (
         
@@ -15,7 +15,7 @@ function TablesForm({data, changeHandler}) {
                         id='table_name'
                         name="table_name"
                         type='text'
-                        value = {data.table_name}
+                        value = {table.table_name}
                         onChange = {changeHandler}
                         required = {true}
                         />
@@ -29,7 +29,7 @@ function TablesForm({data, changeHandler}) {
                         name="capacity"
                         type = 'number'
                         min='1'
-                        value = {data.capacity}
+                        value = {table.capacity}
                         onChange = {changeHandler}
                         required = {true}
                         />

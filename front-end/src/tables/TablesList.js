@@ -3,33 +3,29 @@ import React from "react"
 function TablesList({tables, handleFinish}){
 
    
-const cards = tables.map((tab)=>{
-    if(tab.reservation_id !== null){
+const cards = tables.map((table)=>{
+    if(table.reservation_id !== null){
     return (
-        <div key={tab.table_id} className="border border-secondary">
+        <div key={table.table_id} className="border border-secondary">
             <div className="card-body">
-                <h5 className="card-title">{tab.table_name}</h5>
-                <p className="card-text">Capacity: {tab.capacity}</p>
-                <p className="card-text">Reservation: {tab.reservation_id}</p>
-                
+                <h5 className="card-title">{table.table_name}</h5>
+                <p className="card-text">Capacity: {table.capacity}</p>
+                <p className="card-text">Reservation: {table.reservation_id}</p>
+                <p className="card-text" data-table-id-status={table.table_id}>Occupied</p>
                 <div className="row justify-content-end mb-3">
-                        <button data-table-id-finish={tab.table_id} name={tab.table_id} className="btn btn-success" onClick={handleFinish}>Finish</button>
-                        <button data-table-id-status={tab.table_id} className="btn btn-danger">Occupied</button>
-                   
+                        <button id={table.table_id} data-table-id-finish={table.table_id} name={table.reservation_id} className="btn btn-success" onClick={handleFinish}>Finish</button>
                 </div>
             </div>
         </div>
     )}
     else{
         return(
-            <div key={tab.table_id} className="border border-secondary">
+            <div key={table.table_id} className="border border-secondary">
             <div  className="card-body">
-                <h5 className="card-title">{tab.table_name}</h5>
-                <p className="card-text">Capacity: {tab.capacity}</p>
+                <h5 className="card-title">{table.table_name}</h5>
+                <p className="card-text">Capacity: {table.capacity}</p>
+                <p className="card-text" data-table-id-status={table.table_id}>free</p>
                 <div className="row justify-content-end mb-3">
-                    <div className="col-3 mb-3">
-                        <button data-table-id-status={tables.table_id} className='btn btn-success'>Free</button>
-                    </div>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables, finishTable } from "../utils/api";
+import { listReservations, listTables, finishTable, updateStatus } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import Reservations from "../reservations/Reservations"
 import {next, previous} from "../utils/date-time"
@@ -19,10 +19,10 @@ function Dashboard({date, setDate}) {
 
   useEffect(()=>{
     loadDashboard()
-    loadTables()
-    
-
   }, [date]);
+
+ useEffect(loadTables, [])
+ useEffect(loadDashboard, [])
 
   
   
@@ -63,8 +63,16 @@ return () => abortController.abort()
     event.preventDefault()
     const confirmation = window.confirm("Is this table ready to seat new guests? This cannot be undone.")
     if(confirmation){
-      const id = event.target.name
+      const id = event.target.id
       finishTable(id)
+      .then(()=>{
+        loadTables()
+      })
+      .then(()=>{
+        const status = 'finished'
+        updateStatus(event.target.name, status)
+        .then(loadDashboard)
+      })
       .catch(setError)
     }
   }
