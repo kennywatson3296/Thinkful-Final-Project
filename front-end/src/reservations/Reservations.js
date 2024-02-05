@@ -1,13 +1,12 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
-import {deleteReservation} from "../utils/api"
 
-function Reservations({reservations}){  
-  
+function Reservations({reservations, handleCancel}){  
+  const options = ['finished', 'cancelled']
     
     const cards = reservations.map((reservation)=> {
-      const reservation_id = reservation.reservation_id
-      if(reservation.status !== 'finished')
+      if(options.indexOf(reservation.status)<0){
          return ( <div key={reservation.reservation_id} className='border border-secondary'>
       <div  className='card-body'>
           <h5 className='card-title'>{reservation.first_name} {reservation.last_name}</h5>
@@ -24,12 +23,12 @@ function Reservations({reservations}){
             Status: {reservation.status}
           </p>
       </div>
-      <button type='button' className="btn btn-danger " onClick={()=> deleteReservation(reservation_id)}>Delete</button>
-      {reservation.status === 'booked' ? <a href={`/reservations/${reservation_id}/seat`} className='btn btn-success'>Seat</a>
+      <button type='button' name={reservation.reservation_id} data-reservation-id-cancel={reservation.reservation_id} className="btn btn-danger " onClick={handleCancel}>Cancel</button>
+      {reservation.status === 'booked' ? <Link to={`/reservations/${reservation.reservation_id}/seat`} className="btn btn-success">Seat</Link>
       : null }
-      <a href={`/reservations/${reservation_id}/edit`} className='btn btn-secondary'>Edit</a>
+      <Link to={`/reservations/${reservation.reservation_id}/edit`}><button className='btn btn-secondary'>Edit</button></Link>
       </div>
-    )})
+    )}})
   
     return ( <div>
         {cards}

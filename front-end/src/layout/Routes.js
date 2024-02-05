@@ -18,7 +18,7 @@ import SeatReservation from "../tables/SeatReservation";
  */
 function Routes() {
   const [date, setDate] = useState(today())
-  console.log(date)
+ 
   return (
     <Switch>
       <Route exact={true} path="/">

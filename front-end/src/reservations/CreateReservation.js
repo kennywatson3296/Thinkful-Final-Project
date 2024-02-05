@@ -56,6 +56,7 @@ if(result !== null){
 
   useEffect(()=>{
     checkValid(reservation)
+    console.log(reservation)
   }, [reservation])
 
 

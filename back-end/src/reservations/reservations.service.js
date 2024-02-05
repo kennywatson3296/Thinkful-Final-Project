@@ -6,6 +6,7 @@ function list(date){
     return knex('reservations')
     .select('first_name','last_name', 'mobile_number', 'people', 'reservation_date', 'reservation_time', 'reservation_id', 'status')
     .where({ 'reservation_date' : date })
+    .whereNot({'status': 'finished'})
     .distinct()
     
 }

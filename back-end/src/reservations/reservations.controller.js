@@ -11,7 +11,6 @@ if(req.query.date){
   res.json({ data: await service.list(date)})
 }else if(req.query.mobile_number){
   const number = req.query.mobile_number
-  console.log(number)
   res.json({data: await service.search(number)})
 }
 }
@@ -56,8 +55,7 @@ function validTimeframe(req, res, next){
   const day = new Date(`${reservation_date}`)
   const today = new Date().toISOString().slice(0,10)
  const daySub = day.toISOString().slice(0,10)
-console.log(reservation_time)
-console.log(reservation_time.split(":").join(""))
+
   const time = reservation_time.split(":").join("")
   let result = null
   day.getDay() === 1 && daySub < today  ? result = "both" 
@@ -152,23 +150,50 @@ async function updateStatus(req, res, next){
 
 function hasValidStatus(req, res, next){
   const {status} = req.body.data
-  const options = ['booked', 'seated', 'finished']
-  if (status && options.indexOf(status)>=0){
+  const reservation = res.locals.reservation
+  if (!status || status === 'booked'){
     return next()
+  }else if(status === 'seated' && reservation.status === 'seated'){
+    return next({
+      status:400, message: 'seated'
+    })
+  }else if(status === 'cancelled'){
+    return next()
+  }else if(reservation.status === 'finished'){
+    return next({status:400, message: 'finished'})
   }
   return next({
-    status:400, message: 'status'
+    status:400, message: 'unknown'
   })
 }
 
+function createStatusCheck(req, res, next){
+  const reserv = req.body.data
+  const status = reserv.status
+  const reservation = res.locals.reservation
+  const options = ['seated', 'cancelled', 'finished']
+ if(!status){
+  return next()}
+if(reservation.status === 'seated' && status === 'seated'){
+  return next({status: 400, message: 'seated'})
+}
+if(reservation.status === 'finished'){
+  return next({status: 400, message: 'finished'})
+}
+if(status === 'booked'){
+  return next()
+}
+}
+
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
-  create: [hasData, hasProperty('first_name'), hasProperty('last_name'), validDate,
+  create: [hasData, hasProperty('first_name'), hasProperty('last_name'), validDate, createStatusCheck,
           hasProperty('reservation_time'), hasProperty('mobile_number'), hasProperty('people'), hasPeople, validTime, validTimeframe, asyncErrorBoundary(create)],
   delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)],
   read: [asyncErrorBoundary(reservationExists), read],
   update: [asyncErrorBoundary(reservationExists), hasData, hasProperty('first_name'), hasProperty('last_name'), validDate,
   hasProperty('reservation_time'), hasProperty('mobile_number'), hasProperty('people'), hasPeople, validTime, validTimeframe, asyncErrorBoundary(update)],
-  updateStatus: [hasData, asyncErrorBoundary(reservationExists), hasValidStatus, updateStatus],
+  updateStatus: [hasData, asyncErrorBoundary(reservationExists), hasValidStatus, asyncErrorBoundary(updateStatus)],
   
 };

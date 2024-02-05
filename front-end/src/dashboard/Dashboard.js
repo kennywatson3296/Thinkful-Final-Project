@@ -77,6 +77,17 @@ return () => abortController.abort()
     }
   }
 
+  function handleCancel(event){
+    event.preventDefault()
+    const confirmation = window.confirm("Do you want to cancel this reservation? This cannot be undone.")
+    if(confirmation){
+      const status = 'cancelled'
+      updateStatus(event.target.name, status)
+      .then(loadDashboard)
+      .catch(setError)
+    }
+  }
+
 if(reservations.length > 0){
   return (
     <main>
@@ -90,11 +101,13 @@ if(reservations.length > 0){
         <button className="col-3" type="button" onClick={handleNext}>Next</button>
       </div>
       <ErrorAlert error={error} />
-      <div col-6 mb-3>
-      <Reservations reservations={reservations} />
+      <div className="row">
+      <div className="col-6">
+      <Reservations reservations={reservations} handleCancel={handleCancel} />
 </div>
-<div col-6 mb-3>
+<div className="col-6 ">
   <TablesList tables={tables} handleFinish={handleFinish}/>
+</div>
 </div>
     </main>
   );
@@ -114,8 +127,11 @@ else{
       <div className="col-6 mb-6">
       <h6 className="mb-0">No Reservations for date: {date}</h6>
       </div>
-      <div className="col-6 mb-6">
+      <div className="row">
+        <div className="col-6">{null}</div>
+      <div className="col-6">
       <TablesList tables={tables} handleFinish={handleFinish}/>
+      </div>
       </div>
     </main>
   )
