@@ -51,15 +51,15 @@ const errorResponses = {
 }
 
 function validTimeframe(req, res, next){
-  const {data: {reservation_date, reservation_time}} = req.body
-  const day = new Date(`${reservation_date}`)
+  const {reservation_date, reservation_time} = req.body.data
+  const day = new Date(reservation_date)
   const today = new Date().toISOString().slice(0,10)
  const daySub = day.toISOString().slice(0,10)
 
   const time = reservation_time.split(":").join("")
   let result = null
-  day.getDay() === 1 && daySub < today  ? result = "both" 
-  : day.getDay() === 1 ? result = "day"
+  day.getDay() === 2 && daySub < today  ? result = "both" 
+  : day.getDay() === 2 ? result = "day"
   : daySub < today ? result = "past"
   : time > 2130 ? result = "time"
   : time < 1030 ? result = "time"
@@ -144,14 +144,14 @@ async function update(req, res, next){
 async function updateStatus(req, res, next){
   const reservation = res.locals.reservation
   const {status} = req.body.data
-  console.log(status)
+  
   const updatedReservation = {
     ...reservation,
     status: status}
 
-  console.log(updatedReservation)
+  
   const response = await service.updateStatus(updatedReservation)
-  console.log(response[0])
+  
   res.json({data: {status: response[0]} })
 }
 

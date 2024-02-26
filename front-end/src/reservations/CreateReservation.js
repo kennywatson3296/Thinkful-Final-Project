@@ -39,7 +39,7 @@ const errorResponses = {
    res.reservation_date.length > 0 ? day = res.reservation_date : day = toDay
 res.reservation_time.length > 0 ? time = res.reservation_time.split(':').join('') : time = 1300
     const date = new Date(day)
-    
+   
     date.getDay() === 1 && day < toDay  ? result = "both" 
   : date.getDay() === 1 ? result = "day"
   : day< toDay ? result = "past"
