@@ -6,7 +6,8 @@ function list(date){
     return knex('reservations')
     .select('first_name','last_name', 'mobile_number', 'people', 'reservation_date', 'reservation_time', 'reservation_id', 'status')
     .where({ 'reservation_date' : date })
-    .whereNot({'status': 'finished'}, {'status': 'cancelled'})
+    .whereNot({'status': 'finished'})
+    .orWhere({'status': 'cancelled'})
     //added because of non-understanding why my migrations failed to rollback and delete D.B. data
     .distinctOn('first_name')
     
