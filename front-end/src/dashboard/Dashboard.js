@@ -30,7 +30,7 @@ function Dashboard({date, setDate}) {
       const abortController = new AbortController();
       setError(null);
       
-      listReservations( {date} , abortController.signal)
+      listReservations( date , abortController.signal)
         .then(setReservations)
         .catch(setError);
         
@@ -64,14 +64,13 @@ return () => abortController.abort()
     const confirmation = window.confirm("Is this table ready to seat new guests? This cannot be undone.")
     if(confirmation){
       const id = event.target.id
-      finishTable(id)
+      const status = 'finished'
+      finishTable(id, status)
       .then(()=>{
         loadTables()
       })
       .then(()=>{
-        const status = 'finished'
-        updateStatus(event.target.name, status)
-        .then(loadDashboard)
+        loadDashboard()
       })
       .catch(setError)
     }

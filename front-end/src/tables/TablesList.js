@@ -26,6 +26,7 @@ const cards = tables.map((table)=>{
                 <p className="card-text">Capacity: {table.capacity}</p>
                 <p className="card-text" data-table-id-status={table.table_id}>free</p>
                 <div className="row justify-content-end mb-3">
+
                 </div>
             </div>
         </div>

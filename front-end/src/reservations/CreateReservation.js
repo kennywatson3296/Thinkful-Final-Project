@@ -16,6 +16,7 @@ function CreateReservation({setDate}){
         reservation_date: "",
         reservation_time: "",
         people: 0,
+        status: 'booked',
     }
 
     //set the variable to update for creation
@@ -56,7 +57,7 @@ if(result !== null){
 
   useEffect(()=>{
     checkValid(reservation)
-    console.log(reservation)
+    
   }, [reservation])
 
 
@@ -72,8 +73,6 @@ history.goBack()
 //submitHandler function for creating reservations
   function submitHandler(event){
     event.preventDefault()
-    console.log(reservation.reservation_time)
-    console.log(reservation.reservation_time.split(":").join(""))
     setError(null)
     createReservation(reservation)
     .then(setDate(reservation.reservation_date))
@@ -90,6 +89,18 @@ history.goBack()
         setReservation((previousReservation)=>({
             ...previousReservation,
             [name]: Number(value),
+        }))
+    }else if(name === 'mobile_number'){
+        let val = value.replace(/\D/g, '')
+        if(val.length > 3){
+            val = val.substring(0,3) + '-' + val.substring(3)
+        }
+        if(val.length > 7){
+            val = val.substring(0,7) + '-' + val.substring(7)
+        }
+        setReservation((previousReservation)=>({
+            ...previousReservation,
+            [name]: val,
         }))
     }else{
     setReservation((previousReservation)=>({
@@ -115,7 +126,7 @@ history.goBack()
                     <button type='button' className='btn btn-secondary' onClick={cancelHandler}>Cancel</button>
                 </div>
                 <div className='col-3 mb-3'>
-                    <button type="submit" className='btn btn-primary' >Submit</button>
+                    <button type="submit" className='btn btn-primary'>Submit</button>
                 </div>
             </div>
         </form>

@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import {today} from "../utils/date-time"
@@ -18,7 +18,15 @@ import SeatReservation from "../tables/SeatReservation";
  */
 function Routes() {
   const [date, setDate] = useState(today())
- 
+  console.log(date)
+  const location = useLocation()
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const dateParam = searchParams.get('date');
+    if(dateParam){
+      setDate(dateParam)
+    }
+  }, [location.search]);
   return (
     <Switch>
       <Route exact={true} path="/">

@@ -7,7 +7,8 @@ function list(date){
     .select('first_name','last_name', 'mobile_number', 'people', 'reservation_date', 'reservation_time', 'reservation_id', 'status')
     .where({ 'reservation_date' : date })
     .whereNot({'status': 'finished'})
-    .distinct()
+    //added because of non-understanding why my migrations failed to rollback and delete D.B. data
+    .distinctOn('first_name')
     
 }
 
@@ -52,7 +53,7 @@ function updateStatus(updatedReservation){
     return knex("reservations")
     .select("*")
     .where({"reservation_id": updatedReservation.reservation_id})
-    .update(updatedReservation, "*")
+    .update(updatedReservation, "status")
 }
 
 function read(reservationId){

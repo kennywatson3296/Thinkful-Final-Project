@@ -148,6 +148,9 @@ describe("US-06 - Reservation status", () => {
         .orderBy(["reservation_date", "reservation_time"])
         .first();
       [tableOne, tableTwo] = await knex("tables").orderBy("table_name");
+      console.log(reservationOne)
+      console.log(tableOne)
+      console.log(tableTwo)
     });
 
     test("returns 200 and changes reservation status to 'seated'", async () => {

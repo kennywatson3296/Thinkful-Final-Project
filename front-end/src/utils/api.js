@@ -59,12 +59,7 @@ async function fetchJson(url, options, onCancel) {
  */
 
 export async function listReservations(params, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations`);
-  
-  console.log(params)
-  Object.entries(params).forEach(([key, value]) =>
-    url.searchParams.append(key, value.toString())
-  );
+  const url = new URL(`${API_BASE_URL}/reservations/?date=${params}`);
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
@@ -114,12 +109,14 @@ export async function readReservation(reservationId, signal){
   return await fetchJson(url, { headers, signal }, [])
 }
 
-export async function seatReservation(tableId, reservationId, signal){
+//api call to seat the reservation and update reservation status
+export async function seatReservation(tableId, reservationId, status, signal){
   const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`)
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({ data: {reservation_id: reservationId} }),
+    body: JSON.stringify({ data: {reservation_id: reservationId,
+                                  status: status} }),
     signal
   }
   return await fetchJson(url, options)

@@ -124,11 +124,13 @@ async function destroy(req, res, next){
   res.sendStatus(204)
 }
 
+//read function for a particular reservation
 async function read(req, res, next){
   const {reservation} = res.locals
   res.json({data: reservation})
 }
 
+//edit controller function
 async function update(req, res, next){
   const updatedReservation = {
     ...req.body.data,
@@ -138,16 +140,22 @@ async function update(req, res, next){
   res.json({data: await service.read(updatedReservation.reservation_id)})
 }
 
+// /tables/:tableId/seat 
 async function updateStatus(req, res, next){
-  const {reservation} = res.locals
+  const reservation = res.locals.reservation
   const {status} = req.body.data
+  console.log(status)
   const updatedReservation = {
     ...reservation,
     status: status}
-  await service.updateStatus(updatedReservation)
-  res.json({data: await service.read(updatedReservation.reservation_id)})
+
+  console.log(updatedReservation)
+  const response = await service.updateStatus(updatedReservation)
+  console.log(response[0])
+  res.json({data: {status: response[0]} })
 }
 
+//status verification to update the status of the reservation, seat and finish
 function hasValidStatus(req, res, next){
   const {status} = req.body.data
   const reservation = res.locals.reservation
@@ -159,29 +167,29 @@ function hasValidStatus(req, res, next){
     })
   }else if(status === 'cancelled'){
     return next()
+  }else if(reservation.status === 'seated' && status === 'finished'){
+    return next()
   }else if(reservation.status === 'finished'){
     return next({status:400, message: 'finished'})
-  }
+  }else if(status === 'seated' && reservation.status === 'booked'){
+    return next()
+  }else if(reservation.status !== 'finished' && status === 'finished'){
+  return next()
+  }else{
   return next({
     status:400, message: 'unknown'
-  })
+  })}
 }
 
+//status verification on creation
 function createStatusCheck(req, res, next){
   const reserv = req.body.data
-  const status = reserv.status
-  const reservation = res.locals.reservation
-  const options = ['seated', 'cancelled', 'finished']
- if(!status){
-  return next()}
-if(reservation.status === 'seated' && status === 'seated'){
-  return next({status: 400, message: 'seated'})
-}
-if(reservation.status === 'finished'){
-  return next({status: 400, message: 'finished'})
-}
-if(status === 'booked'){
+if(!reserv.status){
   return next()
+}else if(reserv.status === 'booked'){
+  return next()
+}else{
+  return next({status: 400, message: reserv.status})
 }
 }
 

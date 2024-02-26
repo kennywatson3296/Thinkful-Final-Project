@@ -72,6 +72,7 @@ describe("US-05 - Finish an occupied table - E2E", () => {
 
       const finishButtonSelector = `[data-table-id-finish="${table.table_id}"]`;
       await page.waitForSelector(finishButtonSelector);
+      
 
       page.on("dialog", async (dialog) => {
         expect(dialog.message()).toContain(

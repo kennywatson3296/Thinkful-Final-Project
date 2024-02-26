@@ -46,7 +46,7 @@ function ReservationForm({data, changeHandler}){
                     pattern='[0-9]{3}-[0-9]{3}-[0-9]{4}'
                     value = {data.mobile_number}
                     onChange = {changeHandler}
-                    required = {true}
+                    required
                     />
                 </div>
                 <div className='col-6 form-group'>
