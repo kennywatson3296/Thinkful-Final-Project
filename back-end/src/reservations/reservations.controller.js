@@ -51,15 +51,15 @@ const errorResponses = {
 }
 
 function validTimeframe(req, res, next){
-  const {reservation_date, reservation_time} = req.body.data
+  const {reservation_time, reservation_date} = req.body.data
   const day = new Date(reservation_date)
   const today = new Date().toISOString().slice(0,10)
  const daySub = day.toISOString().slice(0,10)
 
   const time = reservation_time.split(":").join("")
   let result = null
-  day.getDay() === 2 && daySub < today  ? result = "both" 
-  : day.getDay() === 2 ? result = "day"
+  day.getDay() === 1 && daySub < today  ? result = "both" 
+  : day.getDay() === 1 ? result = "day"
   : daySub < today ? result = "past"
   : time > 2130 ? result = "time"
   : time < 1030 ? result = "time"
@@ -144,21 +144,21 @@ async function update(req, res, next){
 async function updateStatus(req, res, next){
   const reservation = res.locals.reservation
   const {status} = req.body.data
-  
   const updatedReservation = {
     ...reservation,
     status: status}
 
   
   const response = await service.updateStatus(updatedReservation)
-  
   res.json({data: {status: response[0]} })
 }
 
 //status verification to update the status of the reservation, seat and finish
 function hasValidStatus(req, res, next){
   const {status} = req.body.data
+  
   const reservation = res.locals.reservation
+ 
   if (!status || status === 'booked'){
     return next()
   }else if(status === 'seated' && reservation.status === 'seated'){

@@ -18,7 +18,6 @@ import SeatReservation from "../tables/SeatReservation";
  */
 function Routes() {
   const [date, setDate] = useState(today())
-  console.log(date)
   const location = useLocation()
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -29,7 +28,7 @@ function Routes() {
   }, [location.search]);
   return (
     <Switch>
-      <Route exact={true} path="/">
+      <Route  path="/">
         <Redirect to={"/dashboard"} />
       </Route>
       <Route exact={true} path="/search">

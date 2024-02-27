@@ -54,8 +54,10 @@ async function create(req, res){
     //checks if a table exists
 async function tableExists(req, res, next){
     const {tableId} = req.params
+    
     const tab = await service.read(tableId)
     const table = tab[0]
+   
     if(table){
         res.locals.table = table
         return next()
@@ -84,6 +86,7 @@ return next({
 //checks if a table is occupied
 async function checkTable(req, res, next){
     const table = res.locals.table
+   
     if(table.reservation_id){
         return next({
             status: 400, message: `Table already occupied with reservation!`
@@ -94,7 +97,6 @@ async function checkTable(req, res, next){
 async function update(req, res, next){
     const table = res.locals.table
     const reservation = res.locals.reservation
-    const {status} = req.body.data
     
 const updatedTable = {
     ...table,
@@ -102,10 +104,10 @@ const updatedTable = {
 }
 const updatedReservation = {
     ...reservation,
-    status: status
+    status: 'seated'
 }
 
-const newTable = await service.update(updatedTable)
+await service.update(updatedTable)
 
 const response = await reservationService.updateStatus(updatedReservation)
 
@@ -124,6 +126,7 @@ function read(req, res, next){
 }
  function hasOccupants(req, res, next){
     const table = res.locals.table
+    
     if(table.reservation_id){
         return next()
     }return next({
@@ -155,8 +158,9 @@ async function finishTable(req, res, next){
 
 
 function hasValidStatus(req, res, next){
-    const {status} = req.body.data
     const reservation = res.locals.reservation
+    const status = 'seated'
+    
     if (!status || status === 'booked'){
       return next()
     }else if(status === 'seated' && reservation.status === 'seated'){
@@ -191,6 +195,15 @@ function hasValidStatus(req, res, next){
     })
   }
 
+  /*function checkReservation(req, res, next){
+    const reservation = res.locals.reservation
+    if(reservation.status === 'seated'){
+        return next({
+            status: 400, message: 'seated'
+        })
+    }else 
+  }*/
+
   //reservationExists for delete request
   async function reservationExistsOnDelete(req, res, next){
     const table = res.locals.table
@@ -221,6 +234,6 @@ module.exports = {
     delete: [asyncErrorBoundary(tableExists), asyncErrorBoundary(destroy)],
     read: [asyncErrorBoundary(tableExists), read],
     update: [hasData, hasId, asyncErrorBoundary(tableExists), asyncErrorBoundary(checkTable),
-        asyncErrorBoundary(checkCap), asyncErrorBoundary(reservationExists), hasValidStatus, asyncErrorBoundary(update)],
+        asyncErrorBoundary(checkCap), asyncErrorBoundary(reservationExists),  hasValidStatus, asyncErrorBoundary(update)],
     finishTable: [ asyncErrorBoundary(tableExists), hasOccupants, asyncErrorBoundary(reservationExistsOnDelete), asyncErrorBoundary(finishTable)]
 }
