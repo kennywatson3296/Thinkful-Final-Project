@@ -78,11 +78,25 @@ function changeHandler({target: {name, value}}){
             ...previousReservation,
             [name]: Number(value),
         }))
+    }else if(name === 'mobile_number'){
+        let val = value.replace(/\D/g, '')
+        if(val.length > 3){
+            val = val.substring(0,3) + '-' + val.substring(3)
+        }
+        if(val.length > 7){
+            val = val.substring(0,7) + '-' + val.substring(7)
+        }
+        setReservation((previousReservation)=>({
+            ...previousReservation,
+            [name]: val,
+        }))
     }else{
     setReservation((previousReservation)=>({
         ...previousReservation,
         [name]: value,
-    }))}}
+    }))}
+    
+   }
 
     function cancelHandler(){
         history.goBack()
